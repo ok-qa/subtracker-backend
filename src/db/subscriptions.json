@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Amazon Prime",
+    "price": "120",
+    "term": "year",
+    "endDate": "2026-05-01",
+    "category": "Shopping & Memberships",
+    "id": "385a4640-a350-44cb-bf6c-390c2fe0508f"
+  },
+  {
+    "name": "Netflix",
+    "price": "6.99",
+    "term": "month",
+    "endDate": "2025-07-26",
+    "category": "Entertainment",
+    "id": "41d6a02f-efdf-4f1e-ad8c-eb3a1db8670d"
+  },
+  {
+    "name": "PlayStation",
+    "price": "5.99",
+    "term": "month",
+    "endDate": "2025-07-28",
+    "category": "Gaming",
+    "id": "86033929-0b40-47bd-ab93-201f9d1752d5"
+  },
+  {
+    "name": "Peacock",
+    "price": "4.99",
+    "term": "month",
+    "endDate": "2025-07-15",
+    "category": "Entertainment",
+    "id": "2b9f83bf-8c62-4c26-89b4-96c71aa9070e"
+  },
+  {
+    "name": "Dropbox",
+    "price": "4.99",
+    "term": "month",
+    "endDate": "2025-07-04",
+    "category": "Cloud Storage",
+    "id": "50f4c650-5868-41a1-b41c-4ffe41738510"
+  },
+  {
+    "name": "PRO Club",
+    "price": "339",
+    "term": "month",
+    "endDate": "2025-08-01",
+    "category": "Health & Fitness",
+    "id": "e84b88aa-35cc-4e54-b7e3-9444fbaced30"
+  },
+  {
+    "name": "AmazonStorage",
+    "price": "0.99",
+    "term": "month",
+    "endDate": "2025-09-04",
+    "category": "Cloud Storage",
+    "id": "d3b3e414-a4d2-4e13-a6b0-d37b3f8f07c6"
+  },
+  {
+    "id": "846a8b51-0d93-4ac5-85a2-17fa4d452c9b",
+    "name": "HappyPaws",
+    "price": "120",
+    "term": "year",
+    "endDate": "2026-02-02",
+    "category": "Pets"
+  }
+]
