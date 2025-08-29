@@ -1,9 +1,4 @@
-import { v4 as uuid } from "uuid";
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
 import createHttpError from "http-errors";
-import subscriptions from "../db/subscriptions.json" assert { type: "json" };
 import { addSubsValidator } from "../subscriptionsValidator.js";
 import {
   createSubscription,
@@ -12,15 +7,6 @@ import {
   getSubscriptionById,
   updateSubscription,
 } from "../services/subscriptions.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const filePath = path.resolve(__dirname, "../db/subscriptions.json");
-
-const saveSubscriptions = async (subscriptions) => {
-  await fs.writeFile(filePath, JSON.stringify(subscriptions, null, 2), "utf-8");
-};
 
 export const getAllSubscriptionsController = async (req, res, next) => {
   const subscriptions = await getAllSubscriptions();
@@ -36,11 +22,6 @@ export const getSubscriptionByIdController = async (req, res) => {
   const subscription = await getSubscriptionById(id);
   if (!subscription) {
     throw createHttpError(404, "Subscription not found");
-    // res.json({
-    //   status: 404,
-    //   message: "Subscription not found",
-    // });
-    // return;
   }
   res.json({
     status: 200,
