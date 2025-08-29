@@ -21,7 +21,6 @@ const runCategoriesSeed = async () => {
       const newCategory = {
         name: category,
       };
-      console.log("new category: ", newCategory);
       await CategoriesCollection.create(newCategory);
     }
   } catch (error) {

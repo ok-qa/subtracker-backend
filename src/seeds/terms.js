@@ -7,7 +7,6 @@ const runTermsSeed = async () => {
       const newTerm = {
         name: term,
       };
-      console.log("new term: ", newTerm);
       await TermsCollection.create(newTerm);
     }
   } catch (error) {

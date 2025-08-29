@@ -46,9 +46,9 @@ const validateCategory = (category) => {
 export const addSubsValidator = (data) => {
   const isNameValid = !!data.name;
   const isPriceValid = validatePrice(data.price);
-  const isTermValid = validateTerm(data.term);
+  const isTermValid = !!data.term;
   const isDateValid = validateDate(data.endDate);
-  const isCategoryValid = validateCategory(data.category);
+  const isCategoryValid = !!data.category;
 
   const validFields = [
     isNameValid,

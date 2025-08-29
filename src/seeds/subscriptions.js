@@ -67,10 +67,8 @@ const runSubscriptionsSeed = async () => {
         category: foodDrinks.id,
       },
     ];
-    console.log("subscription Data: ", subscriptionData);
 
     await SubscriptionsCollection.create(subscriptionData);
-
     console.log("Successfully created subscriptions collection");
   } catch (error) {
     console.log(error);
