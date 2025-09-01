@@ -1,5 +1,4 @@
 import createHttpError from "http-errors";
-import { addSubsValidator } from "../subscriptionsValidator.js";
 import {
   createSubscription,
   deleteSubscription,
@@ -18,8 +17,8 @@ export const getAllSubscriptionsController = async (req, res, next) => {
 };
 
 export const getSubscriptionByIdController = async (req, res) => {
-  const { id } = req.params;
-  const subscription = await getSubscriptionById(id);
+  const { subscriptionId } = req.params;
+  const subscription = await getSubscriptionById(subscriptionId);
   if (!subscription) {
     throw createHttpError(404, "Subscription not found");
   }
@@ -31,10 +30,6 @@ export const getSubscriptionByIdController = async (req, res) => {
 };
 
 export const addSubscriptionController = async (req, res) => {
-  if (!addSubsValidator(req.body)) {
-    return res.status(400).json({ error: "invalid field" });
-  }
-
   const subscription = await createSubscription(req.body);
 
   res.status(201).json({
@@ -45,12 +40,9 @@ export const addSubscriptionController = async (req, res) => {
 };
 
 export const updateSubscriptionController = async (req, res, next) => {
-  const { id } = req.params;
-  if (!addSubsValidator(req.body)) {
-    res.status(400).json({ error: "invalid field" });
-  }
+  const { subscriptionId } = req.params;
 
-  const result = await updateSubscription(id, req.body);
+  const result = await updateSubscription(subscriptionId, req.body);
 
   if (!result) {
     next(createHttpError(404, "Subscription nor found"));
@@ -67,8 +59,8 @@ export const updateSubscriptionController = async (req, res, next) => {
 };
 
 export const patchSubscriptionController = async (req, res, next) => {
-  const { id } = req.params;
-  const result = await updateSubscription(id, req.body);
+  const { subscriptionId } = req.params;
+  const result = await updateSubscription(subscriptionId, req.body);
 
   if (!result) {
     next(createHttpError(404, "Subscription nor found"));
@@ -82,8 +74,8 @@ export const patchSubscriptionController = async (req, res, next) => {
 };
 
 export const deleteSubscriptionController = async (req, res, next) => {
-  const { id } = req.params;
-  const subscription = await deleteSubscription(id);
+  const { subscriptionId } = req.params;
+  const subscription = await deleteSubscription(subscriptionId);
   if (!subscription) {
     throw createHttpError(404, "Subscription not found");
   }

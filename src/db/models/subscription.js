@@ -6,6 +6,7 @@ export const subscriptionSchema = new Schema(
       type: String,
       required: true,
     },
+    //TODO: change price to number
     price: {
       type: String,
       required: true,
