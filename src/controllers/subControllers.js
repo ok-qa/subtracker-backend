@@ -6,9 +6,14 @@ import {
   getSubscriptionById,
   updateSubscription,
 } from "../services/subscriptions.js";
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 
 export const getAllSubscriptionsController = async (req, res, next) => {
-  const subscriptions = await getAllSubscriptions();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const subscriptions = await getAllSubscriptions({
+    page,
+    perPage,
+  });
   res.json({
     status: 200,
     message: "Successfully found all subscriptions",

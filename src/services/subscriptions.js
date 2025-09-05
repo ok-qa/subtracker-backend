@@ -1,6 +1,28 @@
 import { SubscriptionsCollection } from "../db/models/subscription.js";
+import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
-export const getAllSubscriptions = () => SubscriptionsCollection.find();
+export const getAllSubscriptions = async ({ page, perPage }) => {
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+
+  const subscriptionsQuery = SubscriptionsCollection.find();
+  const subscriptionsCount = await SubscriptionsCollection.find()
+    .merge(subscriptionsQuery)
+    .countDocuments();
+
+  const subscriptions = await subscriptionsQuery.skip(skip).limit(limit).exec();
+
+  const paginationData = calculatePaginationData(
+    subscriptionsCount,
+    perPage,
+    page
+  );
+
+  return {
+    data: subscriptions,
+    ...paginationData,
+  };
+};
 
 export const getSubscriptionById = (id) => SubscriptionsCollection.findById(id);
 
