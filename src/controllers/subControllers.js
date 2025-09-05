@@ -7,12 +7,16 @@ import {
   updateSubscription,
 } from "../services/subscriptions.js";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+import { parseSortParams } from "../utils/parseSortParams.js";
 
 export const getAllSubscriptionsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
   const subscriptions = await getAllSubscriptions({
     page,
     perPage,
+    sortBy,
+    sortOrder,
   });
   res.json({
     status: 200,

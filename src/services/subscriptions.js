@@ -1,7 +1,12 @@
 import { SubscriptionsCollection } from "../db/models/subscription.js";
 import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
-export const getAllSubscriptions = async ({ page, perPage }) => {
+export const getAllSubscriptions = async ({
+  page,
+  perPage,
+  sortBy,
+  sortOrder,
+}) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
@@ -10,7 +15,11 @@ export const getAllSubscriptions = async ({ page, perPage }) => {
     .merge(subscriptionsQuery)
     .countDocuments();
 
-  const subscriptions = await subscriptionsQuery.skip(skip).limit(limit).exec();
+  const subscriptions = await subscriptionsQuery
+    .skip(skip)
+    .limit(limit)
+    .sort({ [sortBy]: sortOrder })
+    .exec();
 
   const paginationData = calculatePaginationData(
     subscriptionsCount,
