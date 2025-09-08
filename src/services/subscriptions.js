@@ -1,43 +1,8 @@
 import { SubscriptionsCollection } from "../db/models/subscription.js";
 
-export const getAllSubscriptions = async ({
-  page,
-  perPage,
-  sortBy,
-  sortOrder,
-}) => {
-  const limit = perPage;
-  const skip = (page - 1) * perPage;
+export const getAllSubscriptions = () => SubscriptionsCollection.find();
 
-  const subscriptionsQuery = SubscriptionsCollection.find()
-    .populate("term", "name")
-    .populate("category", "name");
-  const subscriptionsCount = await SubscriptionsCollection.find()
-    .merge(subscriptionsQuery)
-    .countDocuments();
-
-  const subscriptions = await subscriptionsQuery
-    .skip(skip)
-    .limit(limit)
-    .sort({ [sortBy]: sortOrder })
-    .exec();
-
-  const paginationData = calculatePaginationData(
-    subscriptionsCount,
-    perPage,
-    page
-  );
-
-  return {
-    data: subscriptions,
-    ...paginationData,
-  };
-};
-
-export const getSubscriptionById = (id) =>
-  SubscriptionsCollection.findById(id)
-    .populate("term", "name")
-    .populate("category", "name");
+export const getSubscriptionById = (id) => SubscriptionsCollection.findById(id);
 
 export const createSubscription = (payload) =>
   SubscriptionsCollection.create(payload);
@@ -58,9 +23,7 @@ export const updateSubscription = async (
       includeResultMetadata: true,
       ...options,
     }
-  )
-    .populate("term", "name")
-    .populate("category", "name");
+  );
 
   if (!rawResult || !rawResult.value) return null;
 
