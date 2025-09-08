@@ -7,7 +7,7 @@ export const subscriptionSchema = new Schema(
       required: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     // TODO: change to termId

@@ -4,6 +4,8 @@ import { TermsCollection } from "../db/models/term.js";
 
 const runSubscriptionsSeed = async () => {
   try {
+    await SubscriptionsCollection.deleteMany({});
+
     //terms: year, trial, month
     //category: "Entertainment", "Food & Drinks", "Cloud Storage", "Health & Fitness", "Shopping & Memberships",
 
@@ -33,35 +35,35 @@ const runSubscriptionsSeed = async () => {
     const subscriptionData = [
       {
         name: "Amazon",
-        price: "120",
+        price: 120,
         term: termYear.id,
         endDate: "2026-07-21",
         category: shoppingMembership.id,
       },
       {
         name: "Netflix",
-        price: "0",
+        price: 0,
         term: termTrial.id,
         endDate: "2025-08-21",
         category: entertainment.id,
       },
       {
         name: "iCloud",
-        price: "5.99",
+        price: 5.99,
         term: termMonth.id,
         endDate: "2025-09-30",
         category: cloudStorage.id,
       },
       {
         name: "LAFitness",
-        price: "20",
+        price: 20,
         term: termMonth.id,
         endDate: "2025-08-21",
         category: healthFitness.id,
       },
       {
         name: "Splash",
-        price: "56",
+        price: 56,
         term: termMonth.id,
         endDate: "2025-09-02",
         category: foodDrinks.id,
