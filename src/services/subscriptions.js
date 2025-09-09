@@ -10,7 +10,9 @@ export const getAllSubscriptions = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const subscriptionsQuery = SubscriptionsCollection.find();
+  const subscriptionsQuery = SubscriptionsCollection.find()
+    .populate("term", "name")
+    .populate("category", "name");
   const subscriptionsCount = await SubscriptionsCollection.find()
     .merge(subscriptionsQuery)
     .countDocuments();
@@ -33,10 +35,21 @@ export const getAllSubscriptions = async ({
   };
 };
 
-export const getSubscriptionById = (id) => SubscriptionsCollection.findById(id);
+export const getSubscriptionById = (id) =>
+  SubscriptionsCollection.findById(id)
+    .populate("term", "name")
+    .populate("category", "name");
 
-export const createSubscription = (payload) =>
-  SubscriptionsCollection.create(payload);
+export const createSubscription = async (payload) => {
+  const newSubscription = await SubscriptionsCollection.create(payload);
+  const populatedSubscription = await SubscriptionsCollection.findById(
+    newSubscription._id
+  )
+    .populate("term", "name")
+    .populate("category", "name");
+
+  return populatedSubscription;
+};
 
 export const deleteSubscription = (id) =>
   SubscriptionsCollection.findOneAndDelete({ _id: id });
@@ -55,11 +68,16 @@ export const updateSubscription = async (
       ...options,
     }
   );
-
   if (!rawResult || !rawResult.value) return null;
 
+  const populatedSubscription = await SubscriptionsCollection.findById(
+    rawResult.value._id
+  )
+    .populate("term", "name")
+    .populate("category", "name");
+
   return {
-    subscription: rawResult.value,
+    subscription: populatedSubscription,
     isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
