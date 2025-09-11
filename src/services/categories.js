@@ -1,4 +1,4 @@
-import { CategoriesCollection } from "../db/models/category";
+import { CategoriesCollection } from "../db/models/category.js";
 
 export const getAllCategories = () => CategoriesCollection.find();
 

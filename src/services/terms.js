@@ -1,4 +1,4 @@
-import { TermsCollection } from "../db/models/term";
+import { TermsCollection } from "../db/models/term.js";
 
 export const getAllTerms = () => TermsCollection.find();
 

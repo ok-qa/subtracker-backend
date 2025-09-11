@@ -1,7 +1,7 @@
 import { Router } from "express";
 import subscriptionsRouter from "./subscriptions.js";
-import categoriesRouter from "./categoriesRouter.js";
-import termsRouter from "./termsRouter.js";
+import categoriesRouter from "./categories.js";
+import termsRouter from "./terms.js";
 
 const router = Router();
 
