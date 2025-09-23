@@ -1,4 +1,7 @@
+import { SORT_ORDER } from "../constants/index.js";
+import { CategoriesCollection } from "../db/models/category.js";
 import { SubscriptionsCollection } from "../db/models/subscription.js";
+import { TermsCollection } from "../db/models/term.js";
 import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
 export const getAllSubscriptions = async ({
@@ -6,13 +9,47 @@ export const getAllSubscriptions = async ({
   perPage,
   sortBy,
   sortOrder,
+  filter = {},
 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const subscriptionsQuery = SubscriptionsCollection.find()
-    .populate("term", "name")
-    .populate("category", "name");
+  const termDoc = filter.term
+    ? await TermsCollection.findOne({ name: filter.term })
+    : null;
+
+  const categories = await CategoriesCollection.find(
+    { filterId: { $in: filter.category } },
+    "_id"
+  ).lean();
+
+  const categoryObjectIds = categories.map((category) => category._id);
+
+  const subscriptionsQuery = SubscriptionsCollection.find().populate(
+    "category",
+    "name"
+  );
+
+  if (filter.name) {
+    subscriptionsQuery.where("name").regex(new RegExp(filter.name, "i"));
+  }
+  if (filter.term) {
+    subscriptionsQuery.where("term").equals(termDoc._id);
+  }
+  if (filter.category) {
+    subscriptionsQuery.where("category").in(categoryObjectIds);
+  }
+  if (filter.price?.minPrice !== undefined) {
+    subscriptionsQuery.where("price").gte(filter.price.minPrice);
+  }
+  if (filter.price?.maxPrice !== undefined) {
+    subscriptionsQuery.where("price").lte(filter.price.maxPrice);
+  }
+
+  const testSubscription = await SubscriptionsCollection.find({
+    price: { $type: "string" },
+  });
+
   const subscriptionsCount = await SubscriptionsCollection.find()
     .merge(subscriptionsQuery)
     .countDocuments();
@@ -20,7 +57,8 @@ export const getAllSubscriptions = async ({
   const subscriptions = await subscriptionsQuery
     .skip(skip)
     .limit(limit)
-    .sort({ [sortBy]: sortOrder })
+    .populate("term", "name")
+    .sort({ [sortBy]: sortOrder === SORT_ORDER.DESC ? -1 : 1 })
     .exec();
 
   const paginationData = calculatePaginationData(

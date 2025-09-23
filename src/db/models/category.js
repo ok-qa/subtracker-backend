@@ -6,6 +6,11 @@ export const categorySchema = new Schema(
       type: String,
       required: true,
     },
+    filterId: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
   },
   {
     timestamps: true,
