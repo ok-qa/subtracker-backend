@@ -8,7 +8,7 @@ export const subscriptionSchema = new Schema(
     },
     //TODO: change price to number
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     // TODO: change to termId

@@ -2,6 +2,7 @@ import { TermsCollection } from "../db/models/term.js";
 
 const runTermsSeed = async () => {
   try {
+    //TODO: capitalize terms
     const termsData = ["trial", "month", "year"];
     for (const term of termsData) {
       const newTerm = {

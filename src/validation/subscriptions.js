@@ -5,9 +5,7 @@ Joi.objectId = joiObjectid(Joi);
 
 export const createSubscriptionsSchema = Joi.object({
   name: Joi.string().required(),
-  price: Joi.string()
-    .pattern(/^\d+(\.\d{1,2})?$/)
-    .required(),
+  price: Joi.number().min(0).precision(2).required(),
   term: Joi.objectId().required(),
   endDate: Joi.date().required(),
   category: Joi.objectId().required(),
@@ -15,7 +13,7 @@ export const createSubscriptionsSchema = Joi.object({
 
 export const updateSubscriptionsSchema = Joi.object({
   name: Joi.string(),
-  price: Joi.string().pattern(/^\d+(\.\d{1,2})?$/),
+  price: Joi.number().min(0).precision(2),
   term: Joi.objectId(),
   endDate: Joi.date(),
   category: Joi.objectId(),

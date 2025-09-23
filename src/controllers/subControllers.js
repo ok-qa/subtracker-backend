@@ -6,9 +6,22 @@ import {
   getSubscriptionById,
   updateSubscription,
 } from "../services/subscriptions.js";
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+import { parseSortParams } from "../utils/parseSortParams.js";
+import { parseFilterParams } from "../utils/parseFilterParams.js";
 
 export const getAllSubscriptionsController = async (req, res, next) => {
-  const subscriptions = await getAllSubscriptions();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+
+  const subscriptions = await getAllSubscriptions({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
   res.json({
     status: 200,
     message: "Successfully found all subscriptions",
