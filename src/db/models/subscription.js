@@ -6,7 +6,6 @@ export const subscriptionSchema = new Schema(
       type: String,
       required: true,
     },
-    //TODO: change price to number
     price: {
       type: Number,
       required: true,
@@ -25,6 +24,11 @@ export const subscriptionSchema = new Schema(
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",
+    },
+
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
     },
   },
   {
