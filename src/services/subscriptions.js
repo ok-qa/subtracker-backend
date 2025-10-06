@@ -57,6 +57,7 @@ export const getAllSubscriptions = async ({
   const subscriptions = await subscriptionsQuery
     .skip(skip)
     .limit(limit)
+    .populate("category", "name")
     .populate("term", "name")
     .sort({ [sortBy]: sortOrder === SORT_ORDER.DESC ? -1 : 1 })
     .exec();
@@ -105,7 +106,9 @@ export const updateSubscription = async (
       includeResultMetadata: true,
       ...options,
     }
-  );
+  )
+    .populate("term", "name")
+    .populate("category", "name");
   if (!rawResult || !rawResult.value) return null;
 
   const populatedSubscription = await SubscriptionsCollection.findById(

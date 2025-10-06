@@ -14,34 +14,34 @@ import {
 } from "../validation/subscriptions.js";
 import validateBody from "../middlewares/validateBody.js";
 import { isValidSubscriptionId } from "../middlewares/isValidSubscriptionId.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const router = Router();
 
-router.get("/subscriptions", ctrlWrapper(getAllSubscriptionsController));
+router.use(authenticate);
+
+router.get("/", ctrlWrapper(getAllSubscriptionsController));
 router.get(
-  "/subscriptions/:subscriptionId",
+  "/:subscriptionId",
   isValidSubscriptionId,
   ctrlWrapper(getSubscriptionByIdController)
 );
 
 router.post(
-  "/subscriptions",
+  "/",
   validateBody(createSubscriptionsSchema),
   ctrlWrapper(addSubscriptionController)
 );
 router.put(
-  "/subscriptions/:subscriptionId",
+  "/:subscriptionId",
   validateBody(updateSubscriptionsSchema),
   ctrlWrapper(updateSubscriptionController)
 );
 router.patch(
-  "/subscriptions/:subscriptionId",
+  "/:subscriptionId",
   validateBody(updateSubscriptionsSchema),
   ctrlWrapper(patchSubscriptionController)
 );
-router.delete(
-  "/subscriptions/:subscriptionId",
-  ctrlWrapper(deleteSubscriptionController)
-);
+router.delete("/:subscriptionId", ctrlWrapper(deleteSubscriptionController));
 
 export default router;

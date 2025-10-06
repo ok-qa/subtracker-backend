@@ -4,10 +4,12 @@ import {
   getAllCategoriesController,
   getCategoryByIdController,
 } from "../controllers/categoriesControllers.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const router = Router();
 
-router.get("/categories", ctrlWrapper(getAllCategoriesController));
-router.get("/categories/:categoryId", ctrlWrapper(getCategoryByIdController));
+router.use(authenticate);
+router.get("/", ctrlWrapper(getAllCategoriesController));
+router.get("/:categoryId", ctrlWrapper(getCategoryByIdController));
 
 export default router;
