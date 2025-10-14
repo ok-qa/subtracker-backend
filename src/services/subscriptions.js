@@ -10,6 +10,7 @@ export const getAllSubscriptions = async ({
   sortBy,
   sortOrder,
   filter = {},
+  user,
 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
@@ -30,6 +31,8 @@ export const getAllSubscriptions = async ({
     "name"
   );
 
+  subscriptionsQuery.where("userId").equals(user._id);
+
   if (filter.name) {
     subscriptionsQuery.where("name").regex(new RegExp(filter.name, "i"));
   }
@@ -45,10 +48,6 @@ export const getAllSubscriptions = async ({
   if (filter.price?.maxPrice !== undefined) {
     subscriptionsQuery.where("price").lte(filter.price.maxPrice);
   }
-
-  const testSubscription = await SubscriptionsCollection.find({
-    price: { $type: "string" },
-  });
 
   const subscriptionsCount = await SubscriptionsCollection.find()
     .merge(subscriptionsQuery)
