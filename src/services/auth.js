@@ -24,7 +24,7 @@ export const loginUser = async (payload) => {
     throw createHttpError(401, "User not found");
   }
 
-  const isEqual = bcrypt.compare(payload.password, user.password);
+  const isEqual = await bcrypt.compare(payload.password, user.password);
   if (!isEqual) {
     throw createHttpError(401, "Unauthorized");
   }
