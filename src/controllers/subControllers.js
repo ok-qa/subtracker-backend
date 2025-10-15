@@ -14,6 +14,7 @@ export const getAllSubscriptionsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
+  const { user } = req;
 
   const subscriptions = await getAllSubscriptions({
     page,
@@ -21,6 +22,7 @@ export const getAllSubscriptionsController = async (req, res, next) => {
     sortBy,
     sortOrder,
     filter,
+    user,
   });
   res.json({
     status: 200,
@@ -43,7 +45,11 @@ export const getSubscriptionByIdController = async (req, res) => {
 };
 
 export const addSubscriptionController = async (req, res) => {
-  const subscription = await createSubscription(req.body);
+  const { user } = req;
+
+  const payload = { ...req.body, userId: user._id };
+
+  const subscription = await createSubscription(payload);
 
   res.status(201).json({
     status: 201,
