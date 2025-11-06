@@ -5,14 +5,29 @@ import cookieParser from "cookie-parser";
 import apiRouter from "./routers/index.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { env } from "./utils/env.js";
 
-const PORT = 3000;
+const PORT = env("PORT");
+
+const allowedOrigins = env("ALLOWED_ORIGINS").split(",");
 
 const setupServer = () => {
   const app = express();
 
   app.use(express.json());
-  app.use(cors());
+
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("CORS not allowed for this origin"));
+        }
+      },
+      credentials: true,
+    })
+  );
   app.use(cookieParser());
 
   app.use(apiRouter);
