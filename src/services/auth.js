@@ -1,10 +1,12 @@
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
+import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
-
 import { UsersCollection } from "../db/models/user.js";
 import { SessionsCollection } from "../db/models/session.js";
-import { FIFTEEN_MINUTES, ONE_DAY } from "../constants/index.js";
+import { FIFTEEN_MINUTES, ONE_DAY, SMTP } from "../constants/index.js";
+import { env } from "../utils/env.js";
+import { sendEmail } from "../utils/sendMail.js";
 
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
@@ -84,4 +86,57 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     userId: session.userId,
     ...newSession,
   });
+};
+
+export const requestResetToken = async (email, baseUrl) => {
+  const user = await UsersCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, "User not found");
+  }
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env("JWT_SECRET"),
+    {
+      expiresIn: "15m",
+    }
+  );
+
+  const encodedToken = encodeURIComponent(resetToken);
+  const resetURL = `${baseUrl}/reset-password?token=${encodedToken}`;
+  await sendEmail({
+    from: env(SMTP.SMTP_FROM),
+    to: email,
+    subject: "Reset your password",
+    html: `<p>Click <a href="${resetURL}">here ${resetURL}</a> to reset your password!</p>`,
+  });
+};
+
+export const resetPassword = async (payload) => {
+  let entries;
+  try {
+    const token = decodeURIComponent(payload.token);
+    entries = jwt.verify(token, env("JWT_SECRET"));
+  } catch (err) {
+    if (err instanceof Error) throw createHttpError(401, err.message);
+    throw err;
+  }
+
+  const user = await UsersCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  if (!user) {
+    throw createHttpError(404, "User not found");
+  }
+
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+  await UsersCollection.updateOne(
+    { _id: user._id },
+    { password: encryptedPassword }
+  );
 };
