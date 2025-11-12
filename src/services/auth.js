@@ -2,9 +2,17 @@ import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
+import path from "path";
+import fs from "node:fs/promises";
+import handlebars from "handlebars";
 import { UsersCollection } from "../db/models/user.js";
 import { SessionsCollection } from "../db/models/session.js";
-import { FIFTEEN_MINUTES, ONE_DAY, SMTP } from "../constants/index.js";
+import {
+  FIFTEEN_MINUTES,
+  ONE_DAY,
+  SMTP,
+  TEMPLATES_DIR,
+} from "../constants/index.js";
 import { env } from "../utils/env.js";
 import { sendEmail } from "../utils/sendMail.js";
 
@@ -104,13 +112,28 @@ export const requestResetToken = async (email, baseUrl) => {
     }
   );
 
+  const resetPasswordTemplatePath = path.join(
+    TEMPLATES_DIR,
+    "reset-password-email.html"
+  );
+
+  const templateSource = (
+    await fs.readFile(resetPasswordTemplatePath)
+  ).toString();
+
+  const template = handlebars.compile(templateSource);
   const encodedToken = encodeURIComponent(resetToken);
   const resetURL = `${baseUrl}/reset-password?token=${encodedToken}`;
+  const html = template({
+    name: user.name,
+    link: resetURL,
+  });
+
   await sendEmail({
     from: env(SMTP.SMTP_FROM),
     to: email,
     subject: "Reset your password",
-    html: `<p>Click <a href="${resetURL}">here ${resetURL}</a> to reset your password!</p>`,
+    html,
   });
 };
 
