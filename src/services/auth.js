@@ -7,12 +7,7 @@ import fs from "node:fs/promises";
 import handlebars from "handlebars";
 import { UsersCollection } from "../db/models/user.js";
 import { SessionsCollection } from "../db/models/session.js";
-import {
-  FIFTEEN_MINUTES,
-  ONE_DAY,
-  SMTP,
-  TEMPLATES_DIR,
-} from "../constants/index.js";
+import { FIFTEEN_MINUTES, ONE_DAY, TEMPLATES_DIR } from "../constants/index.js";
 import { env } from "../utils/env.js";
 import { sendEmail } from "../utils/sendMail.js";
 
@@ -130,7 +125,6 @@ export const requestResetToken = async (email, baseUrl) => {
   });
 
   await sendEmail({
-    from: env(SMTP.SMTP_FROM),
     to: email,
     subject: "Reset your password",
     html,
