@@ -29,7 +29,7 @@ export const patchUserController = async (req, res, next) => {
     res.json({
       status: 200,
       message: `Successfully patched a user!`,
-      data: result.user,
+      data: result,
     });
   } catch (err) {
     console.error(err);
