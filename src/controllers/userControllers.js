@@ -1,6 +1,9 @@
 import createHttpError from "http-errors";
 import { updateUser } from "../services/user.js";
 import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { env } from "../utils/env.js";
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
+import { CLOUDINARY } from "../constants/index.js";
 
 export const patchUserController = async (req, res, next) => {
   try {
@@ -13,7 +16,11 @@ export const patchUserController = async (req, res, next) => {
     let avatarUrl;
 
     if (avatar) {
-      avatarUrl = await saveFileToUploadDir(avatar, fullUrl);
+      if (env(CLOUDINARY.ENABLE_CLOUDINARY) === "true") {
+        avatarUrl = await saveFileToCloudinary(avatar);
+      } else {
+        avatarUrl = await saveFileToUploadDir(avatar, fullUrl);
+      }
     }
 
     const result = await updateUser(req.user._id, {
