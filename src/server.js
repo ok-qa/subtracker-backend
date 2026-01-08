@@ -7,6 +7,7 @@ import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { env } from "./utils/env.js";
 import { UPLOAD_DIR } from "./constants/index.js";
+import session from "express-session";
 
 const PORT = env("PORT");
 
@@ -30,6 +31,21 @@ const setupServer = () => {
     })
   );
   app.use(cookieParser());
+
+  app.use(
+    session({
+      name: "oauth.sid",
+      secret: env("OAUTH_SESSION_SECRET"),
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: env("IS_PROD"),
+        maxAge: 5 * 60 * 1000,
+      },
+    })
+  );
 
   app.use(apiRouter);
 
