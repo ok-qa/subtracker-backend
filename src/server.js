@@ -12,10 +12,11 @@ import session from "express-session";
 const PORT = env("PORT");
 
 const allowedOrigins = env("ALLOWED_ORIGINS").split(",");
+const isProd = String(env("IS_PROD")) === "true";
 
 const setupServer = () => {
   const app = express();
-  app.set("trust proxy", 1)
+  app.set("trust proxy", isProd)
 
   app.use(express.json());
 
@@ -41,9 +42,8 @@ const setupServer = () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        sameSite: "lax",
-        // secure: String(env("IS_PROD"))==="true",
-        secure: true,
+        sameSite: isProd ? "none" : "lax",
+        secure: isProd,
         maxAge: 5 * 60 * 1000,
       },
     })
