@@ -15,6 +15,7 @@ const allowedOrigins = env("ALLOWED_ORIGINS").split(",");
 
 const setupServer = () => {
   const app = express();
+  app.set("trust proxy", 1)
 
   app.use(express.json());
 
@@ -41,7 +42,7 @@ const setupServer = () => {
       cookie: {
         httpOnly: true,
         sameSite: "lax",
-        secure: true,
+        secure: String(env("IS_PROD"))==="true",
         maxAge: 5 * 60 * 1000,
       },
     })
