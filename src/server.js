@@ -42,7 +42,8 @@ const setupServer = () => {
       cookie: {
         httpOnly: true,
         sameSite: "lax",
-        secure: String(env("IS_PROD"))==="true",
+        // secure: String(env("IS_PROD"))==="true",
+        secure: true,
         maxAge: 5 * 60 * 1000,
       },
     })
