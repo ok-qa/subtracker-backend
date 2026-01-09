@@ -41,7 +41,7 @@ const setupServer = () => {
       cookie: {
         httpOnly: true,
         sameSite: "lax",
-        secure: false,
+        secure: true,
         maxAge: 5 * 60 * 1000,
       },
     })
