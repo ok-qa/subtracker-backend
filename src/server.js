@@ -49,6 +49,17 @@ const setupServer = () => {
     })
   );
 
+  app.get('/debug-session', (req, res) => {
+  req.session.test = 'ok';
+  res.json({
+    sessionID: req.sessionID,
+    cookie: req.session.cookie,
+    secure: req.secure,
+    protocol: req.protocol,
+    forwarded: req.headers['x-forwarded-proto']
+  });
+});
+
   app.use(apiRouter);
 
   app.use("/uploads", express.static(UPLOAD_DIR));
