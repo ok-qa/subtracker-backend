@@ -1,5 +1,6 @@
 import { ONE_DAY } from "../constants/index.js";
 import {
+  loginOrSignupWithGoogle,
   loginUser,
   logoutUser,
   refreshUsersSession,
@@ -8,6 +9,7 @@ import {
   resetPassword,
 } from "../services/auth.js";
 import { env } from "../utils/env.js";
+import { generateAuthUrl } from "../utils/googleOAuth2.js";
 
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
@@ -54,10 +56,12 @@ export const logoutUserController = async (req, res) => {
 const setupSession = (res, session) => {
   res.cookie("refreshToken", session.refreshToken, {
     httpOnly: true,
+    sameSite: "lax",
     expires: new Date(Date.now() + ONE_DAY),
   });
   res.cookie("sessionId", session._id, {
     httpOnly: true,
+    sameSite: "lax",
     expires: new Date(Date.now() + ONE_DAY),
   });
 };
@@ -102,4 +106,39 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     data: {},
   });
+};
+
+export const getGoogleOAuthUrlController = async (req, res) => {
+  const {state} = req.query;
+  const url = generateAuthUrl(state);
+
+  res.redirect(url);
+};
+
+export const loginWithGoogleController = async (req, res) => {
+  const session = await loginOrSignupWithGoogle(req.query.code);
+  req.session.oauthAccessToken = session.accessToken;
+  setupSession(res, session);
+
+  const {state} = req.query;
+
+  const decoded = Buffer.from(state, 'base64').toString('utf-8');
+  const data = JSON.parse(decoded);
+
+  res.redirect(`${data.frontend}/oauth/success`);
+
+};
+
+export const OAuthTokenController = async (req, res) => {
+  const session = req.session;
+  if (!session || !session.oauthAccessToken) {
+    return res.json({
+      status: 401,
+      message: "No access token",
+    });
+  }
+  const token = session.oauthAccessToken;
+  delete session.oauthAccessToken;
+
+  res.json({ accessToken: token });
 };
