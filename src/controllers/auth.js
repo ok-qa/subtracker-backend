@@ -118,6 +118,8 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 export const loginWithGoogleController = async (req, res) => {
   const session = await loginOrSignupWithGoogle(req.query.code);
   req.session.oauthAccessToken = session.accessToken;
+  console.log("loginWithGoogleController session.accessToken: ", session.accessToken);
+  console.log("loginWithGoogleController req.session: ", req.session);
   setupSession(res, session);
 
   const {state} = req.query;
@@ -130,6 +132,7 @@ export const loginWithGoogleController = async (req, res) => {
 };
 
 export const OAuthTokenController = async (req, res) => {
+  console.log("OAuthTokenController req.session: ", req.session);
   const session = req.session;
   if (!session || !session.oauthAccessToken) {
     return res.json({
