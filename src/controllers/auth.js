@@ -116,10 +116,13 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 };
 
 export const loginWithGoogleController = async (req, res) => {
+  console.log("get into loginWithGoogleController");
   const session = await loginOrSignupWithGoogle(req.query.code);
   req.session.oauthAccessToken = session.accessToken;
   console.log("loginWithGoogleController session.accessToken: ", session.accessToken);
   console.log("loginWithGoogleController req.session: ", req.session);
+  console.log("before setup session");
+  
   setupSession(res, session);
 
   const {state} = req.query;
