@@ -7,13 +7,16 @@ import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { env } from "./utils/env.js";
 import { UPLOAD_DIR } from "./constants/index.js";
+import session from "express-session";
 
 const PORT = env("PORT");
 
 const allowedOrigins = env("ALLOWED_ORIGINS").split(",");
+const isProd = String(env("IS_PROD")) === "true";
 
 const setupServer = () => {
   const app = express();
+  app.set("trust proxy", isProd)
 
   app.use(express.json());
 
@@ -30,6 +33,21 @@ const setupServer = () => {
     })
   );
   app.use(cookieParser());
+
+  app.use(
+    session({
+      name: "oauth.sid",
+      secret: env("OAUTH_SESSION_SECRET"),
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        sameSite: isProd ? "none" : "lax",
+        secure: isProd,
+        maxAge: 5 * 60 * 1000,
+      },
+    })
+  );
 
   app.use(apiRouter);
 
