@@ -1,0 +1,41 @@
+tags:
+  - Auth
+summary: Confirm Google OAuth
+operationId: confirmGoogleAuth
+description: |
+  Exchange Google authorization code to accessToken saved to session, and then navigating to the frontend
+
+  Note: This endpoint is designed for being GoogleAuth callback
+security: []
+parameters:
+  - in: query
+    name: code
+    required: true
+    schema:
+      type: string
+    description: Authorization code returned by Google
+  - in: query
+    name: state
+    required: true
+    description: |
+      Base64-encoded JSON string preserving frontend state.
+
+      Decoded structure:
+        {
+          "frontend": "https://your-frontend-domain.com"
+        }
+
+    schema:
+      type: string
+      example: eyJmcm9udGVuZCI6Imh0dHBzOi8vZXhhbXBsZS5jb20ifQ==
+
+responses:
+  "302":
+    description: Redirect to the frontend route "/oauth/success"
+    headers:
+      Location:
+        description: "Redirect target url"
+        schema:
+          type: string
+  "401":
+    description: Google authentication failed

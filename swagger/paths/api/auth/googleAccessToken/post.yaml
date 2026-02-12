@@ -1,0 +1,25 @@
+tags:
+  - Auth
+summary: Get a new access token
+operationId: getNewAccessToken
+description: |
+  Get a new access token
+
+  Note: Swagger UI "Try it out" will not work because the operation "Get a new access token" is a part of chain requests. 
+security:
+  - sessionCookie: []
+
+responses:
+  "200":
+    description: Get a new access token
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXCJ9...
+
+  "401":
+    $ref: "../../../../components/responses/401.yaml"

@@ -8,6 +8,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import { env } from "./utils/env.js";
 import { UPLOAD_DIR } from "./constants/index.js";
 import session from "express-session";
+import { swaggerDocs } from "./middlewares/swaggerDocs.js";
 
 const PORT = env("PORT");
 
@@ -60,6 +61,8 @@ const setupServer = () => {
     }
     next(err);
   });
+
+  app.use('/api-docs', swaggerDocs());
 
   app.use(notFoundHandler);
   app.use(errorHandler);
