@@ -21,19 +21,20 @@ export const getAllSubscriptions = async ({
 
   const categories = await CategoriesCollection.find(
     { filterId: { $in: filter.category } },
-    "_id"
+    "_id",
   ).lean();
 
   const categoryObjectIds = categories.map((category) => category._id);
 
   const subscriptionsQuery = SubscriptionsCollection.find().populate(
     "category",
-    "name"
+    "name",
   );
 
   subscriptionsQuery.where("userId").equals(user._id);
 
   if (filter.name) {
+    // TODO: fix case with search by +
     subscriptionsQuery.where("name").regex(new RegExp(filter.name, "i"));
   }
   if (filter.term) {
@@ -64,7 +65,7 @@ export const getAllSubscriptions = async ({
   const paginationData = calculatePaginationData(
     subscriptionsCount,
     perPage,
-    page
+    page,
   );
 
   return {
@@ -78,10 +79,11 @@ export const getSubscriptionById = (id) =>
     .populate("term", "name")
     .populate("category", "name");
 
+// TODO: fix subscription creation case with invalid termId and categoryId
 export const createSubscription = async (payload) => {
   const newSubscription = await SubscriptionsCollection.create(payload);
   const populatedSubscription = await SubscriptionsCollection.findById(
-    newSubscription._id
+    newSubscription._id,
   )
     .populate("term", "name")
     .populate("category", "name");
@@ -95,7 +97,7 @@ export const deleteSubscription = (id) =>
 export const updateSubscription = async (
   subscriptionId,
   payload,
-  options = {}
+  options = {},
 ) => {
   const rawResult = await SubscriptionsCollection.findByIdAndUpdate(
     { _id: subscriptionId },
@@ -104,14 +106,14 @@ export const updateSubscription = async (
       new: true,
       includeResultMetadata: true,
       ...options,
-    }
+    },
   )
     .populate("term", "name")
     .populate("category", "name");
   if (!rawResult || !rawResult.value) return null;
 
   const populatedSubscription = await SubscriptionsCollection.findById(
-    rawResult.value._id
+    rawResult.value._id,
   )
     .populate("term", "name")
     .populate("category", "name");

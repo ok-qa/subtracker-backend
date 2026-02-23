@@ -1,0 +1,32 @@
+tags:
+  - Subscriptions
+summary: Update subscription
+operationId: updateSubscription
+description: Update an existing subscription
+security:
+  - bearerAuth: []
+parameters:
+  - name: subscriptionId
+    in: path
+    required: true
+    schema:
+      type: string
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "../../../../components/schemas/updateSubscriptionRequest.yaml"
+responses:
+  "200":
+    description: Subscription updated
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../components/schemas/subscription.yaml"
+  "400":
+    $ref: "../../../../components/responses/400.yaml"
+  "401":
+    $ref: "../../../../components/responses/401.yaml"
+  "404":
+    $ref: "../../../../components/responses/404.yaml"
