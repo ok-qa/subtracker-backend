@@ -64,7 +64,7 @@ export const updateSubscriptionController = async (req, res, next) => {
   const result = await updateSubscription(subscriptionId, req.body);
 
   if (!result) {
-    next(createHttpError(404, "Subscription nor found"));
+    next(createHttpError(404, "Subscription nor found")); //TODO: remove typo
     return;
   }
 

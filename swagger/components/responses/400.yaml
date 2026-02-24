@@ -21,10 +21,16 @@ content:
           properties:
             message:
               type: string
-              example: "\"email\" must be a valid email"
+              example: '"email" must be a valid email'
               enum:
-               - "\"password\" is not allowed to be empty"
-               - "\"email\" must be a valid email"
-               - "\"email\" is not allowed to be empty"
-               - "\"name\" length must be at least 3 characters long"
-               - "\"name\" is not allowed to be empty"
+                - '"password" is not allowed to be empty'
+                - '"email" must be a valid email'
+                - '"email" is not allowed to be empty'
+                - '"name" length must be at least 3 characters long'
+                - '"name" is not allowed to be empty'
+                - '"term" with value "invalid value" fails to match the valid mongo id pattern'
+                - '"category" with value "invalid value" fails to match the valid mongo id pattern'
+                - '"endDate" must be a valid date'
+                - '"price" must be greater than or equal to 0'
+                - "File too large"
+                - "Only .jpg, .jpeg, .png, .gif files are allowed"

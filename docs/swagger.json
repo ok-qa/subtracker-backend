@@ -25,6 +25,10 @@
     {
       "name": "Auth",
       "description": "Auth operations."
+    },
+    {
+      "name": "Subscriptions",
+      "description": "Subscriptions operations."
     }
   ],
   "paths": {
@@ -125,7 +129,7 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 200
+                      "example": 204
                     },
                     "message": {
                       "type": "string",
@@ -523,6 +527,504 @@
           }
         }
       }
+    },
+    "/api/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Get all subscriptions",
+        "operationId": "getSubscriptions",
+        "description": "Retrieve a list of subscriptions for the authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "description": "Sort by fields: \n _id (default value),\n name,\n price,\n endDate,\n createdAt,\n updatedAt.\n",
+            "schema": {
+              "type": "string",
+              "example": "price"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "description": "Sort order values:\n  asc,\n  desc.\n",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "filter subscriptions by name, case insensitive",
+            "schema": {
+              "type": "string",
+              "example": "Netflix"
+            }
+          },
+          {
+            "in": "query",
+            "name": "term",
+            "description": "Filter subscriptions by term.\nTerm values: year, month, trial\n",
+            "schema": {
+              "type": "string",
+              "example": "year"
+            }
+          },
+          {
+            "in": "query",
+            "name": "categoryIds",
+            "description": "Filter subscriptions by category.\nCategory values:  \n  1 - Entertainment | 2 - Financial & Utilities | 3 - Food & Drinks | 4 - Gaming | 5 - Cloud Storage |  \n  6 - Mobile and Internet | 7 - Software & Productivity | 8 - Shopping & Memberships | 9 - Pets |  \n  10 - Health & Fitness | 11 - News | 12 - Education | 13 - Food,\n",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "example": [
+                "6",
+                "12"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "minPrice",
+            "description": "filter subscriptions by minPrice >= minPrice",
+            "schema": {
+              "type": "string",
+              "example": "3.99"
+            }
+          },
+          {
+            "in": "query",
+            "name": "maxPrice",
+            "description": "filter subscriptions by maxPrice <= maxPrice",
+            "schema": {
+              "type": "string",
+              "example": "100"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of subscriptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/subscription"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Create subscription",
+        "operationId": "createSubscription",
+        "description": "Create a new subscription",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/subscriptions/{subscriptionId}": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Get subscription by ID",
+        "operationId": "getSubscriptionById",
+        "description": "Retrieve a specific subscription by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Subscription ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Update subscription",
+        "operationId": "updateSubscription",
+        "description": "Update an existing subscription",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Partially update subscription",
+        "operationId": "patchSubscription",
+        "description": "Update specific fields of a subscription",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/subscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "Delete subscription",
+        "operationId": "deleteSubscription",
+        "description": "Delete an existing subscription",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Subscription ID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Subscription is successfully removed"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get all categories",
+        "operationId": "getCategories",
+        "description": "Retrieve a list of categories",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/category"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/terms": {
+      "get": {
+        "tags": [
+          "Terms"
+        ],
+        "summary": "Get all terms",
+        "operationId": "getTerms",
+        "description": "Retrieve a list of terms",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of terms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/term"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile",
+        "operationId": "getUserProfile",
+        "description": "Retrieve current user profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Partially update user",
+        "operationId": "patchUser",
+        "description": "Update specific fields of the user profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/updateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -580,6 +1082,284 @@
             "example": "Password successfully reset!"
           }
         }
+      },
+      "subscription": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "price",
+          "term",
+          "endDate",
+          "category",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "description": "Subscription's id",
+            "type": "string",
+            "example": "65e4decdd286b30065d54af9"
+          },
+          "name": {
+            "description": "Subscription's name",
+            "type": "string",
+            "example": "Netflix"
+          },
+          "price": {
+            "description": "Subscription's price",
+            "type": "number",
+            "example": 15.99
+          },
+          "term": {
+            "description": "Term's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2efe"
+          },
+          "endDate": {
+            "description": "Subscription's end date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-02-17T10:44:00Z"
+          },
+          "category": {
+            "description": "Category's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2f02"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          }
+        }
+      },
+      "createSubscriptionRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "term",
+          "endDate",
+          "category"
+        ],
+        "properties": {
+          "name": {
+            "description": "Subscription's name",
+            "type": "string",
+            "example": "Spotify"
+          },
+          "price": {
+            "description": "Subscription's price",
+            "type": "number",
+            "example": 9.99
+          },
+          "term": {
+            "description": "Term's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2efe"
+          },
+          "endDate": {
+            "description": "Subscription's end date",
+            "type": "string",
+            "format": "date"
+          },
+          "category": {
+            "description": "Category's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2f02"
+          }
+        }
+      },
+      "updateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Subscription's name",
+            "type": "string",
+            "example": "Spotify"
+          },
+          "price": {
+            "description": "Subscription's price",
+            "type": "number",
+            "example": 9.99
+          },
+          "category": {
+            "description": "Category's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2f02"
+          },
+          "term": {
+            "description": "Term's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2efe"
+          },
+          "endDate": {
+            "description": "Subscription's end date",
+            "type": "string",
+            "format": "date",
+            "example": "2026-02-17"
+          }
+        }
+      },
+      "category": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt",
+          "filterId"
+        ],
+        "properties": {
+          "id": {
+            "description": "Category's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2f02"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "enum": [
+              "Entertainment",
+              "Financial & Utilities",
+              "Food & Drinks",
+              "Gaming",
+              "Cloud Storage",
+              "Mobile and Internet",
+              "Software & Productivity",
+              "Shopping & Memberships",
+              "Pets",
+              "Health & Fitness",
+              "News",
+              "Education",
+              "Food"
+            ],
+            "example": "Entertainment"
+          },
+          "filterId": {
+            "type": "integer",
+            "description": "Unique category identifier",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "example": 1
+          }
+        }
+      },
+      "term": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique term identifier",
+            "example": "68924cd0d1bc6cd021ba2efc"
+          },
+          "name": {
+            "type": "string",
+            "description": "Term length",
+            "enum": [
+              "trial",
+              "month",
+              "year"
+            ],
+            "example": "trial"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "68d421e4a44e5179ce84334b"
+          },
+          "name": {
+            "type": "string",
+            "example": "John"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@email.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dfwbmillk/image/upload/v1765392797/vjzjgpat1jhkyeomwguu.gif"
+          }
+        }
+      },
+      "updateUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Jason"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary",
+            "description": "Name and avatar file to update"
+          }
+        }
       }
     },
     "responses": {
@@ -617,7 +1397,13 @@
                         "\"email\" must be a valid email",
                         "\"email\" is not allowed to be empty",
                         "\"name\" length must be at least 3 characters long",
-                        "\"name\" is not allowed to be empty"
+                        "\"name\" is not allowed to be empty",
+                        "\"term\" with value \"invalid value\" fails to match the valid mongo id pattern",
+                        "\"category\" with value \"invalid value\" fails to match the valid mongo id pattern",
+                        "\"endDate\" must be a valid date",
+                        "\"price\" must be greater than or equal to 0",
+                        "File too large",
+                        "Only .jpg, .jpeg, .png, .gif files are allowed"
                       ]
                     }
                   }
@@ -666,6 +1452,43 @@
                         "Access token expired",
                         "No access token"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Not found error"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Subscription not found"
                     }
                   }
                 }

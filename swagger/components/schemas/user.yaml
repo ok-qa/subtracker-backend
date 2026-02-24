@@ -1,0 +1,33 @@
+type: object
+required:
+  - id
+  - email
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    example: 68d421e4a44e5179ce84334b
+
+  name:
+    type: string
+    example: John
+
+  email:
+    type: string
+    format: email
+    example: johndoe@email.com
+
+  createdAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"
+
+  updatedAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"
+
+  avatar:
+    type: string
+    example: https://res.cloudinary.com/dfwbmillk/image/upload/v1765392797/vjzjgpat1jhkyeomwguu.gif

@@ -1,0 +1,27 @@
+tags:
+  - Subscriptions
+summary: Get subscription by ID
+operationId: getSubscriptionById
+description: Retrieve a specific subscription by ID
+security:
+  - bearerAuth: []
+parameters:
+  - name: subscriptionId
+    in: path
+    required: true
+    schema:
+      type: string
+      description: Subscription ID
+responses:
+  "200":
+    description: Successfully found subscription
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../components/schemas/subscription.yaml"
+  "400":
+    $ref: "../../../../components/responses/400.yaml"
+  "401":
+    $ref: "../../../../components/responses/401.yaml"
+  "404":
+    $ref: "../../../../components/responses/404.yaml"
