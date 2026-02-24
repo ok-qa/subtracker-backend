@@ -1,0 +1,44 @@
+type: object
+required:
+  - id
+  - name
+  - createdAt
+  - updatedAt
+  - filterId
+
+properties:
+  id:
+    description: "Category's id"
+    type: string
+    example: 68924cd1d1bc6cd021ba2f02
+  createdAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"
+  updatedAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"
+  name:
+    type: string
+    description: Category name
+    enum:
+      - Entertainment
+      - Financial & Utilities
+      - Food & Drinks
+      - Gaming
+      - Cloud Storage
+      - Mobile and Internet
+      - Software & Productivity
+      - Shopping & Memberships
+      - Pets
+      - Health & Fitness
+      - News
+      - Education
+      - Food
+    example: Entertainment
+  filterId:
+    type: integer
+    description: Unique category identifier
+    enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    example: 1

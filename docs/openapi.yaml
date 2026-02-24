@@ -58,6 +58,17 @@ paths:
       $ref: ../swagger/paths/api/subscriptions/updateSubscription/patch.yaml
     delete:
       $ref: ../swagger/paths/api/subscriptions/deleteSubscription/delete.yaml
+  /api/categories:
+    get:
+      $ref: ../swagger/paths/api/categories/get.yaml
+  /api/terms:
+    get:
+      $ref: ../swagger/paths/api/terms/get.yaml
+  /api/user:
+    get:
+      $ref: ../swagger/paths/api/user/get.yaml
+    patch:
+      $ref: ../swagger/paths/api/user/patch.yaml
 components:
   securitySchemes:
     bearerAuth:

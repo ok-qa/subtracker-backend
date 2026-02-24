@@ -1,0 +1,28 @@
+type: object
+required:
+  - id
+  - name
+properties:
+  id:
+    type: string
+    description: Unique term identifier
+    example: 68924cd0d1bc6cd021ba2efc
+
+  name:
+    type: string
+    description: Term length
+    enum:
+      - trial
+      - month
+      - year
+    example: trial
+
+  createdAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"
+
+  updatedAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"

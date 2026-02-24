@@ -1,0 +1,11 @@
+type: object
+properties:
+  name:
+    type: string
+    description: "User's name"
+    example: Jason
+
+  avatar:
+    type: string
+    format: binary
+    description: Name and avatar file to update

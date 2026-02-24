@@ -32,3 +32,5 @@ content:
                 - '"category" with value "invalid value" fails to match the valid mongo id pattern'
                 - '"endDate" must be a valid date'
                 - '"price" must be greater than or equal to 0'
+                - "File too large"
+                - "Only .jpg, .jpeg, .png, .gif files are allowed"

@@ -888,6 +888,143 @@
           }
         }
       }
+    },
+    "/api/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get all categories",
+        "operationId": "getCategories",
+        "description": "Retrieve a list of categories",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/category"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/terms": {
+      "get": {
+        "tags": [
+          "Terms"
+        ],
+        "summary": "Get all terms",
+        "operationId": "getTerms",
+        "description": "Retrieve a list of terms",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of terms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/term"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile",
+        "operationId": "getUserProfile",
+        "description": "Retrieve current user profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Partially update user",
+        "operationId": "patchUser",
+        "description": "Update specific fields of the user profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/updateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1069,6 +1206,160 @@
             "example": "2026-02-17"
           }
         }
+      },
+      "category": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt",
+          "filterId"
+        ],
+        "properties": {
+          "id": {
+            "description": "Category's id",
+            "type": "string",
+            "example": "68924cd1d1bc6cd021ba2f02"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "enum": [
+              "Entertainment",
+              "Financial & Utilities",
+              "Food & Drinks",
+              "Gaming",
+              "Cloud Storage",
+              "Mobile and Internet",
+              "Software & Productivity",
+              "Shopping & Memberships",
+              "Pets",
+              "Health & Fitness",
+              "News",
+              "Education",
+              "Food"
+            ],
+            "example": "Entertainment"
+          },
+          "filterId": {
+            "type": "integer",
+            "description": "Unique category identifier",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "example": 1
+          }
+        }
+      },
+      "term": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique term identifier",
+            "example": "68924cd0d1bc6cd021ba2efc"
+          },
+          "name": {
+            "type": "string",
+            "description": "Term length",
+            "enum": [
+              "trial",
+              "month",
+              "year"
+            ],
+            "example": "trial"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "68d421e4a44e5179ce84334b"
+          },
+          "name": {
+            "type": "string",
+            "example": "John"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@email.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-17T10:44:00Z"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dfwbmillk/image/upload/v1765392797/vjzjgpat1jhkyeomwguu.gif"
+          }
+        }
+      },
+      "updateUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Jason"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary",
+            "description": "Name and avatar file to update"
+          }
+        }
       }
     },
     "responses": {
@@ -1110,7 +1401,9 @@
                         "\"term\" with value \"invalid value\" fails to match the valid mongo id pattern",
                         "\"category\" with value \"invalid value\" fails to match the valid mongo id pattern",
                         "\"endDate\" must be a valid date",
-                        "\"price\" must be greater than or equal to 0"
+                        "\"price\" must be greater than or equal to 0",
+                        "File too large",
+                        "Only .jpg, .jpeg, .png, .gif files are allowed"
                       ]
                     }
                   }
