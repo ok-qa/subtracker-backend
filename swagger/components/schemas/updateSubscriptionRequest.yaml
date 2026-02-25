@@ -1,0 +1,27 @@
+type: object
+properties:
+  name:
+    description: "Subscription's name"
+    type: string
+    example: Spotify
+
+  price:
+    description: "Subscription's price"
+    type: number
+    example: 9.99
+
+  category:
+    description: "Category's id"
+    type: string
+    example: 68924cd1d1bc6cd021ba2f02
+
+  term:
+    description: "Term's id"
+    type: string
+    example: 68924cd1d1bc6cd021ba2efe
+
+  endDate:
+    description: "Subscription's end date"
+    type: string
+    format: date
+    example: "2026-02-17"

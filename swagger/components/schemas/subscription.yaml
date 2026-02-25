@@ -1,0 +1,51 @@
+type: object
+required:
+  - id
+  - name
+  - price
+  - term
+  - endDate
+  - category
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    description: "Subscription's id"
+    type: string
+    example: 65e4decdd286b30065d54af9
+
+  name:
+    description: "Subscription's name"
+    type: string
+    example: Netflix
+
+  price:
+    description: "Subscription's price"
+    type: number
+    example: 15.99
+
+  term:
+    description: "Term's id"
+    type: string
+    example: 68924cd1d1bc6cd021ba2efe
+
+  endDate:
+    description: "Subscription's end date"
+    type: string
+    format: date-time
+    example: "2025-02-17T10:44:00Z"
+
+  category:
+    description: "Category's id"
+    type: string
+    example: 68924cd1d1bc6cd021ba2f02
+
+  createdAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"
+
+  updatedAt:
+    type: string
+    format: date-time
+    example: "2024-02-17T10:44:00Z"

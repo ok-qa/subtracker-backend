@@ -1,0 +1,92 @@
+tags:
+  - Subscriptions
+summary: Get all subscriptions
+operationId: getSubscriptions
+description: Retrieve a list of subscriptions for the authenticated user
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+    example: 1
+  - in: query
+    name: perPage
+    schema:
+      type: integer
+      example: 5
+  - in: query
+    name: sortBy
+    description: |
+      Sort by fields: 
+       _id (default value),
+       name,
+       price,
+       endDate,
+       createdAt,
+       updatedAt.
+    schema:
+      type: string
+      example: "price"
+  - in: query
+    name: sortOrder
+    description: |
+      Sort order values:
+        asc,
+        desc.
+    schema:
+      type: string
+      example: "asc"
+  - in: query
+    name: name
+    description: Filter subscriptions by name, case insensitive
+    schema:
+      type: string
+      example: Netflix
+  - in: query
+    name: term
+    description: |
+      Filter subscriptions by term.
+      Term values: year, month, trial
+    schema:
+      type: string
+      example: year
+  - in: query
+    name: categoryIds
+    description: |
+      Filter subscriptions by category.
+      Category values:  
+        1 - Entertainment | 2 - Financial & Utilities | 3 - Food & Drinks | 4 - Gaming | 5 - Cloud Storage |  
+        6 - Mobile and Internet | 7 - Software & Productivity | 8 - Shopping & Memberships | 9 - Pets |  
+        10 - Health & Fitness | 11 - News | 12 - Education | 13 - Food,
+    schema:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      example: ["6", "12"]
+  - in: query
+    name: minPrice
+    description: Filter subscriptions by price >= minPrice
+    schema:
+      type: string
+      example: "3.99"
+  - in: query
+    name: maxPrice
+    description: Filter subscriptions by price <= maxPrice
+    schema:
+      type: string
+      example: "100"
+responses:
+  "200":
+    description: List of subscriptions
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: "../../../../components/schemas/subscription.yaml"
+  "401":
+    $ref: "../../../../components/responses/401.yaml"

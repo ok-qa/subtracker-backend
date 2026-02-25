@@ -1,0 +1,23 @@
+tags:
+  - Subscriptions
+summary: Delete subscription
+operationId: deleteSubscription
+description: Delete an existing subscription
+security:
+  - bearerAuth: []
+parameters:
+  - name: subscriptionId
+    in: path
+    required: true
+    schema:
+      type: string
+      description: Subscription ID
+responses:
+  "204":
+    description: Subscription is successfully removed
+  "400":
+    $ref: "../../../../components/responses/400.yaml"
+  "401":
+    $ref: "../../../../components/responses/401.yaml"
+  "404":
+    $ref: "../../../../components/responses/404.yaml"

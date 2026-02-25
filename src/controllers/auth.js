@@ -46,6 +46,10 @@ export const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
     await logoutUser(req.cookies.sessionId);
   }
+  // TODO: fix logout without token
+  //  else {
+  //   res.status(401).send();
+  // }
 
   res.clearCookie("sessionId");
   res.clearCookie("refreshToken");
@@ -109,7 +113,7 @@ export const resetPasswordController = async (req, res) => {
 };
 
 export const getGoogleOAuthUrlController = async (req, res) => {
-  const {state} = req.query;
+  const { state } = req.query;
   const url = generateAuthUrl(state);
 
   res.redirect(url);
@@ -118,21 +122,21 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 export const loginWithGoogleController = async (req, res) => {
   const session = await loginOrSignupWithGoogle(req.query.code);
   req.session.oauthAccessToken = session.accessToken;
-  
+
   setupSession(res, session);
 
-  const {state} = req.query;
+  const { state } = req.query;
 
-  const decoded = Buffer.from(state, 'base64').toString('utf-8');
+  const decoded = Buffer.from(state, "base64").toString("utf-8");
   const data = JSON.parse(decoded);
 
   res.redirect(`${data.frontend}/oauth/success`);
-
 };
 
 export const OAuthTokenController = async (req, res) => {
   const session = req.session;
   if (!session || !session.oauthAccessToken) {
+    // TODO: rewrite to get real 401 error
     return res.json({
       status: 401,
       message: "No access token",

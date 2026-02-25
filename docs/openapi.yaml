@@ -1,0 +1,80 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Subscriptions tracker app
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: This is a documentation of subscription tracker app
+tags:
+  - name: Subscriptions tracker
+    description: Managing subscriptions.
+  - name: Auth
+    description: Auth operations.
+  - name: Subscriptions
+    description: Subscriptions operations.
+servers:
+  - url: http://localhost:3000
+  - url: https://subtracker-backend-q0d2.onrender.com
+paths:
+  /api/auth/login:
+    post:
+      $ref: ../swagger/paths/api/auth/login/post.yaml
+  /api/auth/logout:
+    post:
+      $ref: ../swagger/paths/api/auth/logout/post.yaml
+  /api/auth/refresh:
+    post:
+      $ref: ../swagger/paths/api/auth/refresh/post.yaml
+  /api/auth/register:
+    post:
+      $ref: ../swagger/paths/api/auth/register/post.yaml
+  /api/auth/request-reset-email:
+    post:
+      $ref: ../swagger/paths/api/auth/requestResetEmail/post.yaml
+  /api/auth/reset-password:
+    post:
+      $ref: ../swagger/paths/api/auth/resetPassword/post.yaml
+  /api/auth/get-oauth-url:
+    get:
+      $ref: ../swagger/paths/api/auth/getOAuthUrl/get.yaml
+  /api/auth/confirm-google-auth:
+    get:
+      $ref: ../swagger/paths/api/auth/confirmGoogleAuth/get.yaml
+  /api/auth/oauth/access-token:
+    post:
+      $ref: ../swagger/paths/api/auth/googleAccessToken/post.yaml
+  /api/subscriptions:
+    get:
+      $ref: ../swagger/paths/api/subscriptions/getAllSubscriptions/get.yaml
+    post:
+      $ref: ../swagger/paths/api/subscriptions/createSubscription/post.yaml
+  /api/subscriptions/{subscriptionId}:
+    get:
+      $ref: ../swagger/paths/api/subscriptions/getSubscriptionById/get.yaml
+    put:
+      $ref: ../swagger/paths/api/subscriptions/updateSubscription/put.yaml
+    patch:
+      $ref: ../swagger/paths/api/subscriptions/updateSubscription/patch.yaml
+    delete:
+      $ref: ../swagger/paths/api/subscriptions/deleteSubscription/delete.yaml
+  /api/categories:
+    get:
+      $ref: ../swagger/paths/api/categories/get.yaml
+  /api/terms:
+    get:
+      $ref: ../swagger/paths/api/terms/get.yaml
+  /api/user:
+    get:
+      $ref: ../swagger/paths/api/user/get.yaml
+    patch:
+      $ref: ../swagger/paths/api/user/patch.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: "oauth.sid"

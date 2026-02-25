@@ -1,0 +1,36 @@
+tags:
+  - Auth
+summary: Get Google oAuth url
+operationId: getGoogleOAuthUrl
+description: |
+  Get Google oAuth url
+
+  The state parameter is a Base64-encoded JSON string used to preserve frontend context.
+    Example decoded value:
+    { "frontend": "https://example.com" }
+    
+  Note: Swagger UI "Try it out" uses fetch and cannot follow cross-origin redirects to accounts.google.com (CORS). Open this endpoint in a real browser tab instead.
+parameters:
+  - in: query
+    name: state
+    required: true
+    description: |
+      Base64-encoded JSON string preserving frontend state.
+
+      Decoded structure:
+        {
+           "frontend": "https://your-frontend-domain.com"
+        }
+
+    schema:
+      type: string
+      example: eyJmcm9udGVuZCI6Imh0dHBzOi8vZXhhbXBsZS5jb20ifQ==
+security: []
+responses:
+  "302":
+    description: "Redirect to the Google oAuth url"
+    headers:
+      Location:
+        description: "Redirect target url"
+        schema:
+          type: string

@@ -1,0 +1,24 @@
+tags:
+  - Subscriptions
+summary: Create subscription
+operationId: createSubscription
+description: Create a new subscription
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "../../../../components/schemas/createSubscriptionRequest.yaml"
+responses:
+  "201":
+    description: Subscription created
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../components/schemas/subscription.yaml"
+  "400":
+    $ref: "../../../../components/responses/400.yaml"
+  "401":
+    $ref: "../../../../components/responses/401.yaml"
