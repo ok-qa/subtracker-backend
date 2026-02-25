@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { SORT_ORDER } from "../constants/index.js";
 import { CategoriesCollection } from "../db/models/category.js";
 import { SubscriptionsCollection } from "../db/models/subscription.js";
@@ -21,14 +22,14 @@ export const getAllSubscriptions = async ({
 
   const categories = await CategoriesCollection.find(
     { filterId: { $in: filter.category } },
-    "_id"
+    "_id",
   ).lean();
 
   const categoryObjectIds = categories.map((category) => category._id);
 
   const subscriptionsQuery = SubscriptionsCollection.find().populate(
     "category",
-    "name"
+    "name",
   );
 
   subscriptionsQuery.where("userId").equals(user._id);
@@ -64,7 +65,7 @@ export const getAllSubscriptions = async ({
   const paginationData = calculatePaginationData(
     subscriptionsCount,
     perPage,
-    page
+    page,
   );
 
   return {
@@ -79,9 +80,18 @@ export const getSubscriptionById = (id) =>
     .populate("category", "name");
 
 export const createSubscription = async (payload) => {
+  const { category, term } = payload;
+  const categoryExists = await CategoriesCollection.findById(category);
+  if (!categoryExists) {
+    throw createHttpError(400, "Category id is invalid");
+  }
+  const termExists = await TermsCollection.findById(term);
+  if (!termExists) {
+    throw createHttpError(400, "Term id is invalid");
+  }
   const newSubscription = await SubscriptionsCollection.create(payload);
   const populatedSubscription = await SubscriptionsCollection.findById(
-    newSubscription._id
+    newSubscription._id,
   )
     .populate("term", "name")
     .populate("category", "name");
@@ -95,7 +105,7 @@ export const deleteSubscription = (id) =>
 export const updateSubscription = async (
   subscriptionId,
   payload,
-  options = {}
+  options = {},
 ) => {
   const rawResult = await SubscriptionsCollection.findByIdAndUpdate(
     { _id: subscriptionId },
@@ -104,14 +114,14 @@ export const updateSubscription = async (
       new: true,
       includeResultMetadata: true,
       ...options,
-    }
+    },
   )
     .populate("term", "name")
     .populate("category", "name");
   if (!rawResult || !rawResult.value) return null;
 
   const populatedSubscription = await SubscriptionsCollection.findById(
-    rawResult.value._id
+    rawResult.value._id,
   )
     .populate("term", "name")
     .populate("category", "name");
