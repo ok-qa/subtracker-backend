@@ -116,29 +116,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "User logged out",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 204
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "User successfully logged out!"
-                    }
-                  }
-                }
-              }
-            }
+          "204": {
+            "description": "User logged out"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -579,7 +558,7 @@
           {
             "in": "query",
             "name": "name",
-            "description": "filter subscriptions by name, case insensitive",
+            "description": "Filter subscriptions by name, case insensitive",
             "schema": {
               "type": "string",
               "example": "Netflix"
@@ -619,7 +598,7 @@
           {
             "in": "query",
             "name": "minPrice",
-            "description": "filter subscriptions by minPrice >= minPrice",
+            "description": "Filter subscriptions by price >= minPrice",
             "schema": {
               "type": "string",
               "example": "3.99"
@@ -628,7 +607,7 @@
           {
             "in": "query",
             "name": "maxPrice",
-            "description": "filter subscriptions by maxPrice <= maxPrice",
+            "description": "Filter subscriptions by price <= maxPrice",
             "schema": {
               "type": "string",
               "example": "100"
