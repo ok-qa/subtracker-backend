@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { SORT_ORDER } from "../constants/index.js";
 import { CategoriesCollection } from "../db/models/category.js";
 import { SubscriptionsCollection } from "../db/models/subscription.js";
@@ -81,6 +82,15 @@ export const getSubscriptionById = (id) =>
 
 // TODO: fix subscription creation case with invalid termId and categoryId
 export const createSubscription = async (payload) => {
+  const { category, term } = payload;
+  const categoryExists = await CategoriesCollection.findById(category);
+  if (!categoryExists) {
+    throw createHttpError(400, "Category id is invalid");
+  }
+  const termExists = await TermsCollection.findById(term);
+  if (!termExists) {
+    throw createHttpError(400, "Term id is invalid");
+  }
   const newSubscription = await SubscriptionsCollection.create(payload);
   const populatedSubscription = await SubscriptionsCollection.findById(
     newSubscription._id,
