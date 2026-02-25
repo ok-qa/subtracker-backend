@@ -40,7 +40,7 @@ parameters:
       example: "asc"
   - in: query
     name: name
-    description: filter subscriptions by name, case insensitive
+    description: Filter subscriptions by name, case insensitive
     schema:
       type: string
       example: Netflix
@@ -69,13 +69,13 @@ parameters:
       example: ["6", "12"]
   - in: query
     name: minPrice
-    description: filter subscriptions by minPrice >= minPrice
+    description: Filter subscriptions by price >= minPrice
     schema:
       type: string
       example: "3.99"
   - in: query
     name: maxPrice
-    description: filter subscriptions by maxPrice <= maxPrice
+    description: Filter subscriptions by price <= maxPrice
     schema:
       type: string
       example: "100"

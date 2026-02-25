@@ -46,6 +46,10 @@ export const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
     await logoutUser(req.cookies.sessionId);
   }
+  // TODO: fix logout without token
+  //  else {
+  //   res.status(401).send();
+  // }
 
   res.clearCookie("sessionId");
   res.clearCookie("refreshToken");
