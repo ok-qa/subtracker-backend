@@ -1,0 +1,12 @@
+tags:
+  - User
+summary: Delete user
+operationId: deleteUser
+description: Delete current user profile with all subscriptions
+security:
+  - bearerAuth: []
+responses:
+  "204":
+    description: User account is successfully removed
+  "401":
+    $ref: "../../../components/responses/401.yaml"

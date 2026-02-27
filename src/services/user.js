@@ -5,3 +5,6 @@ export const updateUser = (userId, payload) => {
 };
 
 export const getUserById = async (id) => UsersCollection.findById(id);
+
+export const deleteUser = async (id) =>
+  UsersCollection.findOneAndDelete({ _id: id });
