@@ -56,6 +56,10 @@ export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
 };
 
+export const removeAllUserSessions = async (userId) => {
+  await SessionsCollection.deleteMany({ userId });
+};
+
 const createSession = () => {
   const accessToken = randomBytes(30).toString("base64");
   const refreshToken = randomBytes(30).toString("base64");
@@ -108,12 +112,12 @@ export const requestResetToken = async (email, baseUrl) => {
     env("JWT_SECRET"),
     {
       expiresIn: "15m",
-    }
+    },
   );
 
   const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
-    "reset-password-email.html"
+    "reset-password-email.html",
   );
 
   const templateSource = (
@@ -158,7 +162,7 @@ export const resetPassword = async (payload) => {
 
   await UsersCollection.updateOne(
     { _id: user._id },
-    { password: encryptedPassword }
+    { password: encryptedPassword },
   );
 };
 

@@ -69,6 +69,8 @@ paths:
       $ref: ../swagger/paths/api/user/get.yaml
     patch:
       $ref: ../swagger/paths/api/user/patch.yaml
+    delete:
+      $ref: ../swagger/paths/api/user/delete.yaml
 components:
   securitySchemes:
     bearerAuth:

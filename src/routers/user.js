@@ -4,6 +4,7 @@ import validateBody from "../middlewares/validateBody.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { updateUserSchema } from "../validation/user.js";
 import {
+  deleteUserController,
   getUserController,
   patchUserController,
 } from "../controllers/userControllers.js";
@@ -17,9 +18,11 @@ router.patch(
   "/",
   uploadMiddleware,
   validateBody(updateUserSchema),
-  ctrlWrapper(patchUserController)
+  ctrlWrapper(patchUserController),
 );
 
 router.get("/", ctrlWrapper(getUserController));
+
+router.delete("/", ctrlWrapper(deleteUserController));
 
 export default router;
