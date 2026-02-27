@@ -1,9 +1,11 @@
 import createHttpError from "http-errors";
-import { updateUser } from "../services/user.js";
+import { deleteUser, updateUser } from "../services/user.js";
 import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
 import { env } from "../utils/env.js";
 import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
 import { CLOUDINARY } from "../constants/index.js";
+import { deleteUsersSubscriptions } from "../services/subscriptions.js";
+import { removeAllUserSessions } from "../services/auth.js";
 
 export const patchUserController = async (req, res, next) => {
   try {
@@ -52,4 +54,20 @@ export const getUserController = async (req, res, next) => {
     message: `Successfully found a user!`,
     data: user,
   });
+};
+
+export const deleteUserController = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    await deleteUsersSubscriptions(userId);
+    await deleteUser(userId);
+
+    await removeAllUserSessions(userId);
+    res.clearCookie("sessionId");
+    res.clearCookie("refreshToken");
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 };

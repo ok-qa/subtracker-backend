@@ -133,3 +133,6 @@ export const updateSubscription = async (
     isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
+
+export const deleteUsersSubscriptions = ( userId ) =>
+  SubscriptionsCollection.deleteMany({ userId });
