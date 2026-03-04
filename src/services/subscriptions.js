@@ -35,8 +35,8 @@ export const getAllSubscriptions = async ({
   subscriptionsQuery.where("userId").equals(user._id);
 
   if (filter.name) {
-    // TODO: fix case with search by +
-    subscriptionsQuery.where("name").regex(new RegExp(filter.name, "i"));
+    const parsedSearch = filter.name.replaceAll("+", "\\+");
+    subscriptionsQuery.where("name").regex(new RegExp(parsedSearch, "i"));
   }
   if (filter.term) {
     subscriptionsQuery.where("term").equals(termDoc._id);
@@ -134,5 +134,5 @@ export const updateSubscription = async (
   };
 };
 
-export const deleteUsersSubscriptions = ( userId ) =>
+export const deleteUsersSubscriptions = (userId) =>
   SubscriptionsCollection.deleteMany({ userId });
