@@ -18,35 +18,36 @@ import {
   requestResetEmailController,
   resetPasswordController,
 } from "../controllers/auth.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const router = Router();
 
 router.post(
   "/register",
   validateBody(registerUserSchema),
-  ctrlWrapper(registerUserController)
+  ctrlWrapper(registerUserController),
 );
 
 router.post(
   "/login",
   validateBody(loginUserSchema),
-  ctrlWrapper(loginUserController)
+  ctrlWrapper(loginUserController),
 );
 
-router.post("/logout", ctrlWrapper(logoutUserController));
+router.post("/logout", authenticate, ctrlWrapper(logoutUserController));
 
 router.post("/refresh", ctrlWrapper(refreshUserSessionController));
 
 router.post(
   "/request-reset-email",
   validateBody(requestResetEmailSchema),
-  ctrlWrapper(requestResetEmailController)
+  ctrlWrapper(requestResetEmailController),
 );
 
 router.post(
   "/reset-password",
   validateBody(resetPasswordSchema),
-  ctrlWrapper(resetPasswordController)
+  ctrlWrapper(resetPasswordController),
 );
 
 router.get("/get-oauth-url", ctrlWrapper(getGoogleOAuthUrlController));
