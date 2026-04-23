@@ -1,14 +1,16 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import session from "express-session";
+import http from "http";
 
 import apiRouter from "./routers/index.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { env } from "./utils/env.js";
 import { UPLOAD_DIR } from "./constants/index.js";
-import session from "express-session";
 import { swaggerDocs } from "./middlewares/swaggerDocs.js";
+import { registerWsRoutes } from "./routers/subscriptions.js";
 
 const PORT = env("PORT");
 
@@ -17,7 +19,7 @@ const isProd = String(env("IS_PROD")) === "true";
 
 const setupServer = () => {
   const app = express();
-  app.set("trust proxy", isProd)
+  app.set("trust proxy", isProd);
 
   app.use(express.json());
 
@@ -31,7 +33,7 @@ const setupServer = () => {
         }
       },
       credentials: true,
-    })
+    }),
   );
   app.use(cookieParser());
 
@@ -47,7 +49,7 @@ const setupServer = () => {
         secure: isProd,
         maxAge: 5 * 60 * 1000,
       },
-    })
+    }),
   );
 
   app.use(apiRouter);
@@ -62,12 +64,16 @@ const setupServer = () => {
     next(err);
   });
 
-  app.use('/api-docs', swaggerDocs());
+  app.use("/api-docs", swaggerDocs());
 
   app.use(notFoundHandler);
   app.use(errorHandler);
 
-  app.listen(PORT, () => {
+  const server = http.createServer(app);
+
+  registerWsRoutes(server);
+
+  server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };

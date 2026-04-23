@@ -1,9 +1,11 @@
 import createHttpError from "http-errors";
 import {
   createSubscription,
+  createWelcomeMessage,
   deleteSubscription,
   getAllSubscriptions,
   getSubscriptionById,
+  processIncomingMessage,
   updateSubscription,
 } from "../services/subscriptions.js";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
@@ -100,3 +102,17 @@ export const deleteSubscriptionController = async (req, res, next) => {
   }
   res.status(204).send();
 };
+export function handleMessagingConnection(ws, req) {
+  ws.send(JSON.stringify(createWelcomeMessage()));
+
+  ws.on("message", (message) => {
+    const data = message.toString();
+
+    const response = processIncomingMessage(data);
+
+    ws.send(JSON.stringify(response));
+  });
+  ws.on("close", () => {
+    console.log("Client is disconnected");
+  });
+}

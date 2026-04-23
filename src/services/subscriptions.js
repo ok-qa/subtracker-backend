@@ -136,3 +136,11 @@ export const updateSubscription = async (
 
 export const deleteUsersSubscriptions = (userId) =>
   SubscriptionsCollection.deleteMany({ userId });
+
+export const createWelcomeMessage = () => {
+  return { type: "system", message: "Hello! How can I help you?" };
+};
+
+export const processIncomingMessage = (message) => {
+  return { type: "system", message };
+};
