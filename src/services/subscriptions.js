@@ -55,6 +55,48 @@ export const getAllSubscriptions = async ({
     .merge(subscriptionsQuery)
     .countDocuments();
 
+  const allSubscriptions = await subscriptionsQuery
+    .clone()
+    .populate("term", "name")
+    .exec();
+
+  const today = new Date();
+  const activeSubscriptions = allSubscriptions.filter((item) => {
+    return item.endDate > today;
+  });
+
+  const weekStart = new Date();
+  weekStart.setHours(0, 0, 0, 0);
+  const day = weekStart.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  weekStart.setDate(weekStart.getDate() + diffToMonday);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 7);
+
+  let renewalColor = "orange";
+
+  const upcomingRenewal = activeSubscriptions.filter((item) => {
+    const isCurrentWeek = item.endDate >= weekStart && item.endDate < weekEnd;
+    if (isCurrentWeek && renewalColor !== "red") {
+      const isToday =
+        item.endDate.getFullYear() === today.getFullYear() &&
+        item.endDate.getMonth() === today.getMonth() &&
+        item.endDate.getDate() === today.getDate();
+      if (isToday) {
+        renewalColor = "red";
+      }
+    }
+    return isCurrentWeek;
+  });
+
+  const totalMonthlyCost = activeSubscriptions.reduce((sum, sub) => {
+    if (sub.term.name === "trial") return sum;
+    const price = Number(sub.price) || 0;
+
+    const monthly = sub.term.name === "year" ? price / 12 : price;
+    return sum + monthly;
+  }, 0);
+
   const subscriptions = await subscriptionsQuery
     .skip(skip)
     .limit(limit)
@@ -69,9 +111,17 @@ export const getAllSubscriptions = async ({
     page,
   );
 
+  const subscriptionCalculations = {
+    activeSubscriptionsCount: activeSubscriptions.length,
+    totalMonthlyCost,
+    renewalColor,
+    upcomingRenewalCount: upcomingRenewal.length,
+  };
+
   return {
     data: subscriptions,
     ...paginationData,
+    ...subscriptionCalculations,
   };
 };
 
