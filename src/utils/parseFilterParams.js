@@ -15,10 +15,10 @@ const parseTerm = (term) => {
 const parseCategory = (categoryIds) => {
   if (!categoryIds) return;
 
-  const source = Array.isArray(categoryIds) ? categoryIds : [categoryIds];
+  const source = categoryIds.split(",");
 
   const allCategoryIdsAreStrings = source.every(
-    (categoryId) => typeof categoryId === "string"
+    (categoryId) => typeof categoryId === "string",
   );
   if (!allCategoryIdsAreStrings) return;
   return source.map(Number).filter((value) => !Number.isNaN(value));
