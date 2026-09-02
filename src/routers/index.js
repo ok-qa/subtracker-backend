@@ -4,6 +4,7 @@ import categoriesRouter from "./categories.js";
 import termsRouter from "./terms.js";
 import authRouter from "./auth.js";
 import userRouter from "./user.js";
+import featureFlagsRouter from "./featureFlags.js";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use(`${API_URL_PREFIX}/categories`, categoriesRouter);
 router.use(`${API_URL_PREFIX}/terms`, termsRouter);
 router.use(`${API_URL_PREFIX}/auth`, authRouter);
 router.use(`${API_URL_PREFIX}/user`, userRouter);
+router.use(`${API_URL_PREFIX}/feature-flags`, featureFlagsRouter);
 
 export default router;
