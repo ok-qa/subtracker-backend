@@ -130,7 +130,6 @@ export const getSubscriptionById = (id) =>
     .populate("term", "name")
     .populate("category", "name");
 
-// TODO: fix subscription creation case with invalid termId and categoryId
 export const createSubscription = async (payload) => {
   const { category, term } = payload;
   const categoryExists = await CategoriesCollection.findById(category);
