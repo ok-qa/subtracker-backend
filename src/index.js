@@ -1,5 +1,6 @@
 import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from "./constants/index.js";
 import initMongoDB from "./db/initMongoDB.js";
+import runFeatureFlagSeed from "./seeds/featureFlag.js";
 import runAllSeeds from "./seeds/index.js";
 import runSubscriptionsSeed from "./seeds/subscriptions.js";
 import setupServer from "./server.js";
@@ -12,7 +13,7 @@ const bootstrap = async () => {
   setupServer();
 
   // runAllSeeds();
-
+  // runFeatureFlagSeed();
   //   runSubscriptionsSeed();
 };
 
